@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">ToDoIst-Aitzol</string>
+        <!-- Textos para fragment_task_detail.xml -->
+    <string name="task_title">Título</string>
+    <string name="task_description">Descripción</string>
+    <string name="button_edit">Editar</string>
+    <string name="button_delete">Eliminar</string>
+    <!-- Descripción para el botón flotante -->
+    <string name="fab_add_task_description">Añadir nueva tarea</string>
 </resources>
