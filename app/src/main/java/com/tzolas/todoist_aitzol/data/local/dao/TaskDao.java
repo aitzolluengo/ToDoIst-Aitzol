@@ -11,10 +11,6 @@ import java.util.List;
 
 @Dao
 public interface TaskDao {
-
-    @Query("SELECT * FROM tasks")
-    LiveData<List<Task>> getAllTasks();
-
     @Insert
     void insert(Task task);
 
@@ -23,4 +19,19 @@ public interface TaskDao {
 
     @Delete
     void delete(Task task);
+
+    @Query("SELECT * FROM task_table ORDER BY id ASC")
+    LiveData<List<Task>> getAllTasks();
+
+    @Query("DELETE FROM task_table WHERE isCompleted = 1")
+    void deleteAllCompleted();
+
+    @Query("SELECT * FROM task_table ORDER BY title ASC")
+    LiveData<List<Task>> getTasksSortedByName();
+
+    @Query("SELECT * FROM task_table ORDER BY created_at DESC")
+    LiveData<List<Task>> getTasksSortedByDate();
+
+
+
 }

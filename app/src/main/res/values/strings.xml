@@ -1,10 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">ToDoIst-Aitzol</string>
-        <!-- Textos para fragment_task_detail.xml -->
+
+    <!-- Textos para fragment_task_detail.xml -->
     <string name="task_title">Título</string>
     <string name="task_description">Descripción</string>
+    <string name="task_completed">Completada</string>
+    <string name="task_edit">Editar</string>
+    <string name="task_delete">Eliminar</string>
     <string name="button_edit">Editar</string>
     <string name="button_delete">Eliminar</string>
+
     <!-- Descripción para el botón flotante -->
     <string name="fab_add_task_description">Añadir nueva tarea</string>
+
+    <!-- Navegación -->
+    <string name="navigation_drawer_open">Abrir menú</string>
+    <string name="navigation_drawer_close">Cerrar menú</string>
+    <string name="nav_header_welcome">Bienvenido</string>
+    <string name="nav_tasks">Tareas</string>
+    <string name="nav_completed">Tareas Completadas</string>
+    <string name="nav_settings">Configuración</string>
+
+    <!-- Tareas Completadas -->
+    <string name="completed_tasks_title">Tareas Completadas</string>
+    <string name="delete_all_completed">Eliminar todas</string>
+
+    <!-- Preferencias -->
+    <string name="preferences_title">Ajustes</string>
+    <string name="dark_mode">Modo Oscuro</string>
+    <string name="dark_mode_summary">Activa el modo oscuro en la aplicación</string>
+    <string name="theme">Tema</string>
+    <string name="select_theme">Selecciona un tema</string>
+    <string name="choose_theme">Elige un tema</string>
+    <string name="language">Idioma</string>
+    <string name="select_language">Selecciona el idioma</string>
+
+    <string name="sort_order">Sort Order</string>
+    <string name="sort_order_summary">Choose how tasks are sorted</string>
+
 </resources>

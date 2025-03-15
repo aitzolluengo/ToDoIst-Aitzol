@@ -2,22 +2,30 @@ package com.tzolas.todoist_aitzol.viewModel;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-
-import com.tzolas.todoist_aitzol.data.repository.TaskRepository;
 import com.tzolas.todoist_aitzol.data.local.entities.Task;
-
+import com.tzolas.todoist_aitzol.data.repository.TaskRepository;
 import java.util.List;
 
 public class TaskViewModel extends AndroidViewModel {
-    private TaskRepository repository;
-    private LiveData<List<Task>> allTasks;
 
-    public TaskViewModel(Application application) {
+    private final TaskRepository taskRepository;  // ✅ Declara correctamente la variable
+    private final LiveData<List<Task>> allTasks;
+
+    public TaskViewModel(@NonNull Application application) {
         super(application);
-        repository = new TaskRepository(application);
-        allTasks = repository.getAllTasks();
+        taskRepository = new TaskRepository(application);  // ✅ Inicializa el repositorio
+        allTasks = taskRepository.getAllTasks();
+    }
+
+    public LiveData<List<Task>> getSortedTasks(String sortOrder) {
+        if (sortOrder.equals("name")) {
+            return taskRepository.getTasksSortedByName();
+        } else {
+            return taskRepository.getTasksSortedByDate();
+        }
     }
 
     public LiveData<List<Task>> getAllTasks() {
@@ -25,14 +33,18 @@ public class TaskViewModel extends AndroidViewModel {
     }
 
     public void insert(Task task) {
-        repository.insert(task);
+        taskRepository.insert(task);
     }
 
     public void update(Task task) {
-        repository.update(task);
+        taskRepository.update(task);
     }
 
     public void delete(Task task) {
-        repository.delete(task);
+        taskRepository.delete(task);
+    }
+
+    public void deleteAllCompletedTasks() {
+        taskRepository.deleteAllCompletedTasks();
     }
 }

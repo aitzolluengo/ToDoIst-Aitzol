@@ -5,20 +5,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tzolas.todoist_aitzol.R;
 import com.tzolas.todoist_aitzol.data.local.entities.Task;
-import java.util.List;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-
-    private final List<Task> taskList;
+public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
     private final OnTaskClickListener listener;
 
-    public TaskAdapter(List<Task> taskList, OnTaskClickListener listener) {
-        this.taskList = taskList;
+    public TaskAdapter(OnTaskClickListener listener) {
+        super(DIFF_CALLBACK);
         this.listener = listener;
     }
+
+    private static final DiffUtil.ItemCallback<Task> DIFF_CALLBACK = new DiffUtil.ItemCallback<Task>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
 
     @NonNull
     @Override
@@ -30,17 +41,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        Task task = taskList.get(position);
+        Task task = getItem(position); // Asegúrate de obtener el objeto correcto
         holder.taskTitle.setText(task.getTitle());
         holder.taskDescription.setText(task.getDescription());
 
-        // Manejar clics en los ítems
         holder.itemView.setOnClickListener(v -> listener.onTaskClick(task));
-    }
-
-    @Override
-    public int getItemCount() {
-        return taskList.size();
     }
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {

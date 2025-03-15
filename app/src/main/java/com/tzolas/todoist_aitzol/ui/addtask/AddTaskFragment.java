@@ -46,7 +46,7 @@ public class AddTaskFragment extends Fragment {
         String description = editTextDescription.getText().toString();
 
         if (!title.isEmpty()) {
-            Task task = new Task(title, description, false, null);
+            Task task = new Task(title, description, false);
             TaskViewModel taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
             taskViewModel.insert(task);
 

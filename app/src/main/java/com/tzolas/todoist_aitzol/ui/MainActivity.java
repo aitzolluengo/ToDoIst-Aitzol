@@ -1,26 +1,102 @@
 package com.tzolas.todoist_aitzol.ui;
 
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.MenuItem;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
 
+import com.google.android.material.navigation.NavigationView;
 import com.tzolas.todoist_aitzol.R;
+import com.tzolas.todoist_aitzol.ui.completedtask.CompletedTasksFragment;
+import com.tzolas.todoist_aitzol.ui.settings.SettingsFragment;
+import com.tzolas.todoist_aitzol.ui.tasklist.TaskListFragment;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.Locale;
+
+
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String language = prefs.getString("pref_language", "default");
+        boolean isDarkMode = prefs.getBoolean("pref_dark_mode", false);
+
+        setAppLocale(language);
+        setDarkMode(isDarkMode);
+
+        setAppLocale(language);
+
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new TaskListFragment())
+                    .commit();
+            navigationView.setCheckedItem(R.id.nav_tasks);
+        }
+    }
+
+    private void setAppLocale(String languageCode) {
+        Locale locale = languageCode.equals("default") ? Locale.getDefault() : new Locale(languageCode);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        getBaseContext().createConfigurationContext(config);
+    }
+
+    private void setDarkMode(boolean isEnabled) {
+        int nightMode = isEnabled ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
+        AppCompatDelegate.setDefaultNightMode(nightMode);
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_tasks) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new TaskListFragment())
+                    .commit();
+        } else if (id == R.id.nav_completed) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new CompletedTasksFragment())
+                    .commit();
+        } else if (id == R.id.nav_settings) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new SettingsFragment())
+                    .commit();
+            // Implementar fragmento de configuración
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

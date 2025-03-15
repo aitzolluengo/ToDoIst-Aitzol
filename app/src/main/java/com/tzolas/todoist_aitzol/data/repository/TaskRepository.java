@@ -6,14 +6,16 @@ import com.tzolas.todoist_aitzol.data.local.database.AppDatabase;
 import com.tzolas.todoist_aitzol.data.local.dao.TaskDao;
 import com.tzolas.todoist_aitzol.data.local.entities.Task;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class TaskRepository {
-
-    private final TaskDao taskDao; // Campo 'final'
-    private final LiveData<List<Task>> allTasks; // Campo 'final'
+    private final TaskDao taskDao;
+    private final LiveData<List<Task>> allTasks;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public TaskRepository(Application application) {
-        AppDatabase db = AppDatabase.getDatabase(application);
+        AppDatabase db = AppDatabase.getInstance(application);
         taskDao = db.taskDao();
         allTasks = taskDao.getAllTasks();
     }
@@ -23,14 +25,27 @@ public class TaskRepository {
     }
 
     public void insert(Task task) {
-        AppDatabase.databaseWriteExecutor.execute(() -> taskDao.insert(task));
+        executorService.execute(() -> taskDao.insert(task));
     }
 
     public void update(Task task) {
-        AppDatabase.databaseWriteExecutor.execute(() -> taskDao.update(task));
+        executorService.execute(() -> taskDao.update(task));
     }
 
     public void delete(Task task) {
-        AppDatabase.databaseWriteExecutor.execute(() -> taskDao.delete(task));
+        executorService.execute(() -> taskDao.delete(task));
     }
+
+    public void deleteAllCompletedTasks() {
+        executorService.execute(() -> taskDao.deleteAllCompleted());
+    }
+    public LiveData<List<Task>> getTasksSortedByName() {
+        return taskDao.getTasksSortedByName();
+    }
+
+    public LiveData<List<Task>> getTasksSortedByDate() {
+        return taskDao.getTasksSortedByDate();
+    }
+
+
 }

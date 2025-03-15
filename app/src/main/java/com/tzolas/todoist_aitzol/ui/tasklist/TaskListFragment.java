@@ -1,49 +1,48 @@
 package com.tzolas.todoist_aitzol.ui.tasklist;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tzolas.todoist_aitzol.R;
 import com.tzolas.todoist_aitzol.data.local.entities.Task;
 import com.tzolas.todoist_aitzol.viewModel.TaskViewModel;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TaskListFragment extends Fragment {
 
-    private TaskViewModel taskViewModel;
+    private RecyclerView recyclerView;  // ✅ Declarado correctamente
     private TaskAdapter taskAdapter;
-    private List<Task> taskList = new ArrayList<>();
+    private TaskViewModel taskViewModel;
 
     public TaskListFragment() {
         // Constructor público vacío requerido
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflar el layout para este fragmento
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
-
-        // Configurar el RecyclerView
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTasks);
+        recyclerView = view.findViewById(R.id.recyclerViewTasks); // Asegúrate de que este ID coincide con tu XML
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        taskAdapter = new TaskAdapter(taskList, this::onTaskClick);
+
+        taskAdapter = new TaskAdapter(this::onTaskClick);
         recyclerView.setAdapter(taskAdapter);
 
-        // Obtener el ViewModel
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
 
-        // Observar cambios en la lista de tareas
-        taskViewModel.getAllTasks().observe(getViewLifecycleOwner(), tasks -> {
-            taskList.clear();
-            taskList.addAll(tasks);
-            taskAdapter.notifyDataSetChanged();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        String sortOrder = prefs.getString("pref_sort_order", "date");
+
+        taskViewModel.getSortedTasks(sortOrder).observe(getViewLifecycleOwner(), tasks -> {
+            taskAdapter.submitList(tasks);
         });
 
         return view;

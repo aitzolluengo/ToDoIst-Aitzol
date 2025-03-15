@@ -1,57 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.taskdetail.TaskDetailFragment"> <!-- Asegúrate de que esta ruta sea correcta -->
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <!-- Título de la tarea -->
     <TextView
         android:id="@+id/textViewTitle"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/task_title"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp" />
+        android:text="Título de la tarea"
+        android:textSize="20sp" />
 
-    <!-- Descripción de la tarea -->
     <TextView
         android:id="@+id/textViewDescription"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/task_description"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/textViewTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp" />
+        android:text="Descripción de la tarea"
+        android:textSize="16sp" />
 
-    <!-- Botón para editar la tarea -->
+    <CheckBox
+        android:id="@+id/checkBoxCompleted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Completada" />
+
     <Button
         android:id="@+id/buttonEdit"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_edit"
-        app:layout_constraintTop_toBottomOf="@id/textViewDescription"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp" />
+        android:text="Editar" />
 
-    <!-- Botón para eliminar la tarea -->
     <Button
         android:id="@+id/buttonDelete"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_delete"
-        app:layout_constraintTop_toBottomOf="@id/buttonEdit"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:text="Eliminar" />
+</LinearLayout>

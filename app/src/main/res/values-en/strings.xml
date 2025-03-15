@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ToDoIst-Aitzol</string>
+
+    <!-- Texts for fragment_task_detail.xml -->
+    <string name="task_title">Title</string>
+    <string name="task_description">Description</string>
+    <string name="task_completed">Completed</string>
+    <string name="task_edit">Edit</string>
+    <string name="task_delete">Delete</string>
+    <string name="button_edit">Edit</string>
+    <string name="button_delete">Delete</string>
+
+    <!-- Floating button description -->
+    <string name="fab_add_task_description">Add new task</string>
+
+    <!-- Navigation -->
+    <string name="navigation_drawer_open">Open menu</string>
+    <string name="navigation_drawer_close">Close menu</string>
+    <string name="nav_header_welcome">Welcome</string>
+    <string name="nav_tasks">Tasks</string>
+    <string name="nav_completed">Completed Tasks</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Completed Tasks -->
+    <string name="completed_tasks_title">Completed Tasks</string>
+    <string name="delete_all_completed">Delete all</string>
+
+    <!-- Preferences -->
+    <string name="preferences_title">Settings</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="dark_mode_summary">Enable dark mode in the app</string>
+    <string name="theme">Theme</string>
+    <string name="select_theme">Select a theme</string>
+    <string name="choose_theme">Choose a theme</string>
+    <string name="language">Language</string>
+    <string name="select_language">Select a language</string>
+
+    <string name="sort_order">Sort Order</string>
+    <string name="sort_order_summary">Choose how tasks are sorted</string>
+
+</resources>
