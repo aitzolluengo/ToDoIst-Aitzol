@@ -12,13 +12,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tzolas.todoist_aitzol.R;
 import com.tzolas.todoist_aitzol.data.local.entities.Task;
+import com.tzolas.todoist_aitzol.ui.addtask.AddTaskFragment;
+import com.tzolas.todoist_aitzol.ui.taskdetail.TaskDetailFragment;
 import com.tzolas.todoist_aitzol.viewModel.TaskViewModel;
+
 
 public class TaskListFragment extends Fragment {
 
-    private RecyclerView recyclerView;  // ✅ Declarado correctamente
     private TaskAdapter taskAdapter;
     private TaskViewModel taskViewModel;
 
@@ -30,7 +33,8 @@ public class TaskListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
-        recyclerView = view.findViewById(R.id.recyclerViewTasks); // Asegúrate de que este ID coincide con tu XML
+
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewTasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         taskAdapter = new TaskAdapter(this::onTaskClick);
@@ -45,12 +49,27 @@ public class TaskListFragment extends Fragment {
             taskAdapter.submitList(tasks);
         });
 
+        FloatingActionButton fabAddTask = view.findViewById(R.id.fabAddTask);
+        fabAddTask.setOnClickListener(v -> {
+            AddTaskFragment addTaskFragment = new AddTaskFragment();
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, addTaskFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         return view;
     }
 
-    // Método para manejar clics en las tareas
     private void onTaskClick(Task task) {
-        // Aquí puedes abrir el fragmento de detalles de la tarea
-        // Por ejemplo: navigateToTaskDetail(task.getId());
+        TaskDetailFragment taskDetailFragment = new TaskDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("task", task); // ✅ Usamos Parcelable en lugar de Serializable
+        taskDetailFragment.setArguments(bundle);
+
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, taskDetailFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

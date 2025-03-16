@@ -37,7 +37,7 @@
     <string name="language">Idioma</string>
     <string name="select_language">Selecciona el idioma</string>
 
-    <string name="sort_order">Sort Order</string>
-    <string name="sort_order_summary">Choose how tasks are sorted</string>
+    <string name="sort_order">Orden de clasificación</string>
+    <string name="sort_order_summary">Elija cómo se ordenan las tareas</string>
 
 </resources>

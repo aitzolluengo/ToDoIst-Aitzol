@@ -1,19 +1,17 @@
 package com.tzolas.todoist_aitzol.ui.settings;
 
+
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
-
 import com.tzolas.todoist_aitzol.R;
-
 import java.util.Locale;
-
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
@@ -21,11 +19,21 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
 
+        // ✅ Modo Oscuro
         SwitchPreferenceCompat darkModePref = findPreference("pref_dark_mode");
         if (darkModePref != null) {
             darkModePref.setOnPreferenceChangeListener((preference, newValue) -> {
                 boolean isDarkMode = (boolean) newValue;
                 setDarkMode(isDarkMode);
+                return true;
+            });
+        }
+
+        // ✅ Cambio de idioma
+        ListPreference languagePref = findPreference("pref_language");
+        if (languagePref != null) {
+            languagePref.setOnPreferenceChangeListener((preference, newValue) -> {
+                setAppLocale((String) newValue);
                 return true;
             });
         }
@@ -36,23 +44,26 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         AppCompatDelegate.setDefaultNightMode(nightMode);
     }
 
-
     private void setAppLocale(String languageCode) {
+
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(requireContext()).edit();
         editor.putString("pref_language", languageCode);
         editor.apply();
 
-        Locale locale = languageCode.equals("default") ? Locale.getDefault() : new Locale(languageCode);
+
+        Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.setLocale(locale);
 
-        requireContext().createConfigurationContext(config);
 
-        if (getActivity() != null) {
-            getActivity().recreate();  // Reiniciar actividad solo si no es null
-        }
+        Context context = requireActivity().getBaseContext().getApplicationContext().createConfigurationContext(config);
+
+
+        requireActivity().finish();
+        requireActivity().startActivity(requireActivity().getIntent());
     }
+
 
 
 }

@@ -24,10 +24,11 @@
         android:key="pref_language"
         android:title="@string/language"
         android:summary="@string/select_language"
-        android:dialogTitle="@string/select_language"
         android:entries="@array/language_options"
         android:entryValues="@array/language_values"
-        android:defaultValue="default" />
+        android:defaultValue="default"
+        android:dialogTitle="@string/select_language" />
+
 
     <ListPreference
         android:key="pref_sort_order"
