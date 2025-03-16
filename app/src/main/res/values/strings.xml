@@ -47,5 +47,21 @@
     <string name="delete_task_confirm">Sí</string>
     <string name="delete_task_cancel">Cancelar</string>
 
+    <string name="delete_all_tasks_title">Eliminar todas las tareas</string>
+    <string name="delete_all_tasks_message">¿Estás seguro de que deseas eliminar todas las tareas completadas?</string>
+    <string name="delete_all_tasks_confirm">Sí</string>
+    <string name="delete_all_tasks_cancel">Cancelar</string>
+
+    <string name="task_selected_title">Tarea seleccionada</string>
+    <string name="task_selected_message">Has seleccionado:</string>
+    <string name="ok_button">OK</string>
+
+    <string name="button_share">Compartir</string>
+
+    <string name="share_task_title">Compartir tarea</string>
+    <string name="share_task_text">Tarea: %1$s\nDescripción: %2$s\nEstado: %3$s</string>
+    <string name="task_not_completed">No Completada</string>
+    <string name="export_task">Exportar tarea</string>
+
 
 </resources>

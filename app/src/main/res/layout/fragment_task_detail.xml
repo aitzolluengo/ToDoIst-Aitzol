@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:gravity="center_horizontal">
 
     <!-- Título de la tarea -->
     <TextView
@@ -12,7 +13,9 @@
         android:layout_height="wrap_content"
         android:text="@string/task_title"
         android:textSize="20sp"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"/>
 
     <!-- Descripción de la tarea -->
     <TextView
@@ -21,7 +24,8 @@
         android:layout_height="wrap_content"
         android:text="@string/task_description"
         android:textSize="16sp"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:gravity="center"
+        android:layout_marginBottom="12dp"/>
 
     <!-- Checkbox para marcar como completada -->
     <CheckBox
@@ -29,23 +33,47 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/task_completed"
-        android:autofillHints="taskCompleted"/>
+        android:autofillHints="taskCompleted"
+        android:layout_marginBottom="16dp"/>
 
-    <!-- Botón para editar -->
-    <Button
-        android:id="@+id/buttonEdit"
-        android:layout_width="wrap_content"
+    <!-- Botones de Editar y Eliminar alineados horizontalmente -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_edit"
-        android:layout_gravity="center_horizontal"
-        android:paddingHorizontal="32dp"/>
+        android:orientation="horizontal"
+        android:gravity="center">
 
-    <!-- Botón para eliminar -->
+        <Button
+            android:id="@+id/buttonEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_edit"
+            android:paddingHorizontal="24dp"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/buttonDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_delete"
+            android:paddingHorizontal="24dp"/>
+    </LinearLayout>
+
+    <!-- Botón de Compartir -->
     <Button
-        android:id="@+id/buttonDelete"
-        android:layout_width="wrap_content"
+        android:id="@+id/buttonShare"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_delete"
-        android:layout_gravity="center_horizontal"
-        android:paddingHorizontal="32dp"/>
+        android:text="@string/button_share"
+        android:layout_marginTop="12dp"
+        android:paddingVertical="8dp"/>
+
+    <!-- Botón de Exportar -->
+    <Button
+        android:id="@+id/buttonExport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/export_task"
+        android:layout_marginTop="12dp"
+        android:paddingVertical="8dp"/>
 </LinearLayout>

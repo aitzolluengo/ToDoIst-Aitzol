@@ -16,7 +16,6 @@ import com.tzolas.todoist_aitzol.R;
 import com.tzolas.todoist_aitzol.data.local.entities.Task;
 import com.tzolas.todoist_aitzol.ui.tasklist.TaskAdapter;
 import com.tzolas.todoist_aitzol.viewModel.TaskViewModel;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,9 +40,9 @@ public class CompletedTasksFragment extends Fragment {
         adapter = new TaskAdapter(task -> {
             if (task != null) {
                 new AlertDialog.Builder(requireContext())
-                        .setTitle("Tarea seleccionada")
-                        .setMessage("Has seleccionado: " + task.getTitle())
-                        .setPositiveButton("OK", null)
+                        .setTitle(getString(R.string.task_selected_title))
+                        .setMessage(getString(R.string.task_selected_message) + " " + task.getTitle())
+                        .setPositiveButton(getString(R.string.ok_button), null)
                         .show();
             }
         });
@@ -62,9 +61,9 @@ public class CompletedTasksFragment extends Fragment {
         // Listener para eliminar todas las tareas completadas
         buttonDeleteAll.setOnClickListener(v -> {
             new AlertDialog.Builder(requireContext())
-                    .setTitle("Eliminar todas")
-                    .setMessage("¿Estás seguro de que deseas eliminar todas las tareas completadas?")
-                    .setPositiveButton("Sí", (dialog, which) -> {
+                    .setTitle(getString(R.string.delete_all_tasks_title))
+                    .setMessage(getString(R.string.delete_all_tasks_message))
+                    .setPositiveButton(getString(R.string.delete_all_tasks_confirm), (dialog, which) -> {
                         taskViewModel.deleteAllCompletedTasks();
                     })
                     .setNegativeButton("Cancelar", null)
