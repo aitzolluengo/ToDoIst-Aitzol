@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.tzolas.todoist_aitzol.R;
@@ -22,10 +24,18 @@ import com.tzolas.todoist_aitzol.data.local.entities.Task;
 import com.tzolas.todoist_aitzol.ui.EditTaskFragment;
 import com.tzolas.todoist_aitzol.viewModel.TaskViewModel;
 
+
 import java.io.File;
-import java.io.FileOutputStream;
+
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+
+
+
+
+
+
+
 
 public class TaskDetailFragment extends Fragment {
 
@@ -41,20 +51,19 @@ public class TaskDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_detail, container, false);
 
+        // Referencias a UI
         TextView textViewTitle = view.findViewById(R.id.textViewTitle);
         TextView textViewDescription = view.findViewById(R.id.textViewDescription);
         CheckBox checkBoxCompleted = view.findViewById(R.id.checkBoxCompleted);
         Button buttonEdit = view.findViewById(R.id.buttonEdit);
         Button buttonDelete = view.findViewById(R.id.buttonDelete);
-
         Button buttonShare = view.findViewById(R.id.buttonShare);
-        buttonShare.setOnClickListener(v -> shareTask());
-
         Button buttonExport = view.findViewById(R.id.buttonExport);
-        buttonExport.setOnClickListener(v -> exportTaskToTxt());
 
+        // Obtener ViewModel
         taskViewModel = new ViewModelProvider(requireActivity()).get(TaskViewModel.class);
 
+        // Obtener tarea de argumentos
         if (getArguments() != null) {
             task = getArguments().getParcelable("task");
             if (task != null) {
@@ -64,52 +73,122 @@ public class TaskDetailFragment extends Fragment {
             }
         }
 
+        // Marcar tarea como completada
         checkBoxCompleted.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (task != null) {
                 task.setCompleted(isChecked);
                 taskViewModel.update(task);
-                showNotification("Has completado: " + task.getTitle());
+                showNotification(getString(R.string.task_completed_notification, task.getTitle()));
             }
         });
 
-        buttonEdit.setOnClickListener(v -> {
-            EditTaskFragment editTaskFragment = new EditTaskFragment();
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("task", task); // Pasamos la tarea actual
-            editTaskFragment.setArguments(bundle);
+        // Editar tarea
+        buttonEdit.setOnClickListener(v -> openEditTaskFragment());
 
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, editTaskFragment) // Reemplazamos el fragmento actual
-                    .addToBackStack(null) // Permite volver atrás
-                    .commit();
-        });
+        // Eliminar tarea con confirmación
+        buttonDelete.setOnClickListener(v -> showDeleteConfirmationDialog());
 
-        buttonDelete.setOnClickListener(v ->
-                new AlertDialog.Builder(requireContext())
-                        .setTitle(getString(R.string.delete_task_title))
-                        .setMessage(getString(R.string.delete_task_message))
-                        .setPositiveButton(getString(R.string.delete_task_confirm), (dialog, which) -> {
-                            if (task != null) {
-                                taskViewModel.delete(task);
-                                requireActivity().getSupportFragmentManager().popBackStack();
-                            }
-                        })
-                        .setNegativeButton("Cancelar", null)
-                        .show()
-        );
+        // Compartir tarea
+        buttonShare.setOnClickListener(v -> shareTask());
 
-        createNotificationChannel(); // Solo creará el canal si la API es 29+
+        // Exportar tarea a texto
+        buttonExport.setOnClickListener(v -> exportTaskToText());
+
+        // Crear canal de notificación (solo en API 29+)
+        createNotificationChannel();
 
         return view;
     }
 
+    // ---------------------------
+    // MÉTODOS PARA GESTIÓN DE TAREAS
+    // ---------------------------
+
+    private void openEditTaskFragment() {
+        if (task == null) return;
+
+        EditTaskFragment editTaskFragment = new EditTaskFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("task", task);
+        editTaskFragment.setArguments(bundle);
+
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, editTaskFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void showDeleteConfirmationDialog() {
+        if (task == null) return;
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.delete_task_title))
+                .setMessage(getString(R.string.delete_task_message))
+                .setPositiveButton(getString(R.string.delete_task_confirm), (dialog, which) -> {
+                    taskViewModel.delete(task);
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                })
+                .setNegativeButton(getString(R.string.cancel), null)
+                .show();
+    }
+
+    // ---------------------------
+    // MÉTODOS PARA COMPARTIR Y EXPORTAR
+    // ---------------------------
+
+    private void shareTask() {
+        if (task == null) return;
+
+        String statusText = task.isCompleted() ? getString(R.string.task_completed) : getString(R.string.task_not_completed);
+        String shareText = getString(R.string.share_task_text, task.getTitle(), task.getDescription(), statusText);
+
+        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+        sendIntent.setType("text/plain");
+
+        startActivity(Intent.createChooser(sendIntent, getString(R.string.share_task_title)));
+    }
+
+    private void exportTaskToText() {
+        if (task != null) {
+            File file = new File(requireContext().getExternalFilesDir(null), "task_export.txt");
+
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write("Tarea: " + task.getTitle() + "\n" +
+                        "Descripción: " + task.getDescription() + "\n" +
+                        "Estado: " + (task.isCompleted() ? "Completada" : "No Completada"));
+                writer.flush();
+
+                Toast.makeText(requireContext(), "Archivo guardado en:\n" + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                Toast.makeText(requireContext(), "Error al exportar tarea", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+    private void shareTextFile(File file) {
+        Uri uri = FileProvider.getUriForFile(requireContext(), "com.tzolas.todoist_aitzol.fileprovider", file);
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        startActivity(Intent.createChooser(intent, getString(R.string.share_task_txt)));
+    }
+
+    // ---------------------------
+    // NOTIFICACIONES
+    // ---------------------------
+
     private void createNotificationChannel() {
         NotificationChannel channel = new NotificationChannel(
                 CHANNEL_ID,
-                "Task Notifications",
+                getString(R.string.notification_channel_name),
                 NotificationManager.IMPORTANCE_DEFAULT
         );
-        channel.setDescription("Notificaciones de tareas completadas");
+        channel.setDescription(getString(R.string.notification_channel_description));
 
         NotificationManager notificationManager = requireContext().getSystemService(NotificationManager.class);
         if (notificationManager != null) {
@@ -121,46 +200,10 @@ public class TaskDetailFragment extends Fragment {
         NotificationManager notificationManager = (NotificationManager) requireContext().getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(requireContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle("Tarea completada")
+                .setContentTitle(getString(R.string.task_notification_title))
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         notificationManager.notify((int) (System.currentTimeMillis() % Integer.MAX_VALUE), builder.build());
     }
-
-    private void shareTask() {
-        if (task != null) {
-            String statusText = task.isCompleted() ? getString(R.string.task_completed) : getString(R.string.task_not_completed);
-            String shareText = getString(R.string.share_task_text, task.getTitle(), task.getDescription(), statusText);
-
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
-            sendIntent.setType("text/plain");
-
-            Intent shareIntent = Intent.createChooser(sendIntent, getString(R.string.share_task_title));
-            startActivity(shareIntent);
-        }
-    }
-
-    private void exportTaskToTxt() {
-        if (task == null) return;
-
-        String fileName = "task_" + task.getId() + ".txt";
-        String content = "Tarea: " + task.getTitle() + "\n" +
-                "Descripción: " + task.getDescription() + "\n" +
-                "Estado: " + (task.isCompleted() ? getString(R.string.task_completed) : getString(R.string.task_not_completed));
-
-        File file = new File(requireContext().getExternalFilesDir(null), fileName);
-
-        try (FileOutputStream fos = new FileOutputStream(file);
-             OutputStreamWriter writer = new OutputStreamWriter(fos)) {
-            writer.write(content);
-            Toast.makeText(requireContext(), "Tarea exportada: " + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            Toast.makeText(requireContext(), "Error al exportar tarea", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
 }

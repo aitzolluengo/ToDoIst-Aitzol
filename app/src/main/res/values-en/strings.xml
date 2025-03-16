@@ -63,5 +63,16 @@
     <string name="task_not_completed">Not Completed</string>
     <string name="export_task">Export task</string>
 
+    <string name="task_completed_notification">You completed: %1$s</string>
+    <string name="cancel">Cancel</string>
+    <string name="export_task_text">Task: %1$s\nDescription: %2$s\nStatus: %3$s</string>
+    <string name="task_exported">Task successfully exported</string>
+    <string name="task_export_error">Error exporting task</string>
+    <string name="share_task_txt">Share Task as TXT</string>
+    <string name="notification_channel_name">Task Notifications</string>
+    <string name="notification_channel_description">Task completion notifications</string>
+
+    <string name="task_notification_title">Task Completed</string>
+
 
 </resources>

@@ -63,5 +63,17 @@
     <string name="task_not_completed">No Completada</string>
     <string name="export_task">Exportar tarea</string>
 
+    <string name="task_completed_notification">Has completado: %1$s</string>
+    <string name="cancel">Cancelar</string>
+    <string name="export_task_text">Tarea: %1$s\nDescripción: %2$s\nEstado: %3$s</string>
+    <string name="task_exported">Tarea exportada correctamente</string>
+    <string name="task_export_error">Error al exportar la tarea</string>
+    <string name="share_task_txt">Compartir Tarea como TXT</string>
+    <string name="notification_channel_name">Notificaciones de Tareas</string>
+    <string name="notification_channel_description">Notificaciones de tareas completadas</string>
+
+    <string name="task_notification_title">Tarea completada</string>
+
+
 
 </resources>
