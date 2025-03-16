@@ -6,11 +6,13 @@
     <!-- Textos para fragment_task_detail.xml -->
     <string name="task_title">Título</string>
     <string name="task_description">Descripción</string>
+    <string name="button_save">Guardar</string>
     <string name="task_completed">Completada</string>
     <string name="task_edit">Editar</string>
     <string name="task_delete">Eliminar</string>
     <string name="button_edit">Editar</string>
     <string name="button_delete">Eliminar</string>
+
 
     <!-- Descripción para el botón flotante -->
     <string name="fab_add_task_description">Añadir nueva tarea</string>
@@ -39,5 +41,11 @@
 
     <string name="sort_order">Orden de clasificación</string>
     <string name="sort_order_summary">Elija cómo se ordenan las tareas</string>
+
+    <string name="delete_task_title">Eliminar tarea</string>
+    <string name="delete_task_message">¿Estás seguro de que deseas eliminar esta tarea?</string>
+    <string name="delete_task_confirm">Sí</string>
+    <string name="delete_task_cancel">Cancelar</string>
+
 
 </resources>

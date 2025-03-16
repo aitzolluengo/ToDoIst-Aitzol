@@ -63,9 +63,9 @@ public class TaskDetailFragment extends Fragment {
 
         buttonDelete.setOnClickListener(v ->
                 new AlertDialog.Builder(requireContext())
-                        .setTitle("Eliminar Tarea")
-                        .setMessage("¿Estás seguro de que deseas eliminar esta tarea?")
-                        .setPositiveButton("Sí", (dialog, which) -> {
+                        .setTitle(getString(R.string.delete_task_title))
+                        .setMessage(getString(R.string.delete_task_message))
+                        .setPositiveButton(getString(R.string.delete_task_confirm), (dialog, which) -> {
                             if (task != null) {
                                 taskViewModel.delete(task);
                                 requireActivity().getSupportFragmentManager().popBackStack();
@@ -81,7 +81,6 @@ public class TaskDetailFragment extends Fragment {
     }
 
     private void createNotificationChannel() {
-        // Solo se ejecuta en API 26+
         NotificationChannel channel = new NotificationChannel(
                 CHANNEL_ID,
                 "Task Notifications",
