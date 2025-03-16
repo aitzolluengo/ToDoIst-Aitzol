@@ -22,8 +22,6 @@ import com.tzolas.todoist_aitzol.ui.tasklist.TaskListFragment;
 
 import java.util.Locale;
 
-
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
@@ -32,12 +30,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String language = prefs.getString("pref_language", "default");
-        setAppLocale(language);
-        applySavedLocale();
+        applyLocale(language);
 
         boolean isDarkMode = prefs.getBoolean("pref_dark_mode", false);
-        setDarkMode(isDarkMode);
-
+        applyDarkMode(isDarkMode);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -59,13 +55,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new TaskListFragment())
                     .commit();
-            navigationView.setCheckedItem(R.id.nav_tasks);
         }
     }
-    private void applySavedLocale() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String languageCode = prefs.getString("pref_language", "default");
 
+    private void applyLocale(String languageCode) {
         if (!languageCode.equals("default")) {
             Locale locale = new Locale(languageCode);
             Locale.setDefault(locale);
@@ -75,38 +68,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
-    private void setAppLocale(String languageCode) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String currentLanguage = prefs.getString("pref_language", "default");
-
-        // ⚠️ Solo recrear si el idioma ha cambiado
-        if (!currentLanguage.equals(languageCode)) {
-            Locale locale = languageCode.equals("default") ? Locale.getDefault() : new Locale(languageCode);
-            Locale.setDefault(locale);
-
-            Configuration config = new Configuration();
-            config.setLocale(locale);
-
-            getApplicationContext().createConfigurationContext(config);
-
-            // Guarda el nuevo idioma en SharedPreferences
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("pref_language", languageCode);
-            editor.apply();
-
-            recreate(); // ✅ Ahora solo se reinicia si realmente cambió el idioma
-        }
-    }
-
-
-
-
-    private void setDarkMode(boolean isEnabled) {
+    private void applyDarkMode(boolean isEnabled) {
         int nightMode = isEnabled ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
         AppCompatDelegate.setDefaultNightMode(nightMode);
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -124,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new SettingsFragment())
                     .commit();
-            // Implementar fragmento de configuración
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

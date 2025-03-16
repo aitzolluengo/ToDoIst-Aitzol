@@ -1,18 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Opción para ver las tareas -->
     <item
         android:id="@+id/nav_tasks"
-        android:icon="@android:drawable/ic_menu_agenda"
-        android:title="@string/nav_tasks" />
+        android:icon="@drawable/ic_task"
+        android:title="@string/nav_tasks"/>
 
+    <!-- Opción para ver tareas completadas -->
     <item
         android:id="@+id/nav_completed"
-        android:icon="@android:drawable/ic_menu_info_details"
-        android:title="@string/nav_completed" />
+        android:icon="@drawable/ic_completed"
+        android:title="@string/nav_completed"/>
 
+    <!-- Opción para configuración -->
     <item
         android:id="@+id/nav_settings"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:title="@string/nav_settings" />
-
+        android:icon="@drawable/ic_settings"
+        android:title="@string/nav_settings"/>
 
 </menu>

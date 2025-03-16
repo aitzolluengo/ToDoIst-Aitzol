@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -12,13 +13,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.tzolas.todoist_aitzol.R;
 import com.tzolas.todoist_aitzol.data.local.entities.Task;
 import com.tzolas.todoist_aitzol.ui.addtask.AddTaskFragment;
 import com.tzolas.todoist_aitzol.ui.taskdetail.TaskDetailFragment;
 import com.tzolas.todoist_aitzol.viewModel.TaskViewModel;
-
 
 public class TaskListFragment extends Fragment {
 
@@ -64,7 +65,7 @@ public class TaskListFragment extends Fragment {
     private void onTaskClick(Task task) {
         TaskDetailFragment taskDetailFragment = new TaskDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("task", task); // ✅ Usamos Parcelable en lugar de Serializable
+        bundle.putParcelable("task", task);
         taskDetailFragment.setArguments(bundle);
 
         getParentFragmentManager().beginTransaction()
