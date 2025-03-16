@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.tzolas.todoist_aitzol.R;
 import com.tzolas.todoist_aitzol.data.local.entities.Task;
@@ -53,20 +55,31 @@ public class TaskDetailFragment extends Fragment {
         CheckBox checkBoxCompleted = view.findViewById(R.id.checkBoxCompleted);
         Button buttonEdit = view.findViewById(R.id.buttonEdit);
         Button buttonDelete = view.findViewById(R.id.buttonDelete);
-        Button buttonShare = view.findViewById(R.id.buttonShare);
-        Button buttonExport = view.findViewById(R.id.buttonExport);
+        FloatingActionButton buttonShare = view.findViewById(R.id.buttonShare);
+        FloatingActionButton buttonExport = view.findViewById(R.id.buttonExport);
 
         // Obtener ViewModel
         taskViewModel = new ViewModelProvider(requireActivity()).get(TaskViewModel.class);
 
-        // Obtener tarea de argumentos
-        if (getArguments() != null) {
+        // 🔥 DEPURACIÓN: Verificamos si `task` llega nulo
+        if (getArguments() != null && getArguments().containsKey("task")) {
             task = getArguments().getParcelable("task");
-            if (task != null) {
-                textViewTitle.setText(task.getTitle());
-                textViewDescription.setText(task.getDescription());
-                checkBoxCompleted.setChecked(task.isCompleted());
+
+            if (task == null) {
+                Log.e("TaskDetailFragment", "⚠️ ERROR: La tarea recibida es NULL");
+                Toast.makeText(requireContext(), "Error al cargar la tarea", Toast.LENGTH_LONG).show();
+                requireActivity().getSupportFragmentManager().popBackStack(); // Volver atrás si la tarea no existe
+                return view;
             }
+
+            // Mostrar datos de la tarea
+            textViewTitle.setText(task.getTitle());
+            textViewDescription.setText(task.getDescription());
+            checkBoxCompleted.setChecked(task.isCompleted());
+        } else {
+            Log.e("TaskDetailFragment", "⚠️ ERROR: No se pasaron argumentos al fragmento");
+            Toast.makeText(requireContext(), "No se encontró la tarea", Toast.LENGTH_LONG).show();
+            requireActivity().getSupportFragmentManager().popBackStack(); // Volver atrás si no hay argumentos
         }
 
         // Marcar tarea como completada
@@ -95,6 +108,7 @@ public class TaskDetailFragment extends Fragment {
 
         return view;
     }
+
 
     // ---------------------------
     // MÉTODOS PARA GESTIÓN DE TAREAS

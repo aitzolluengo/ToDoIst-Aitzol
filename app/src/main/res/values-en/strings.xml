@@ -53,7 +53,7 @@
     <string name="delete_all_tasks_cancel">Cancel</string>
 
     <string name="task_selected_title">Task Selected</string>
-    <string name="task_selected_message">You have selected:</string>
+    <string name="task_selected_message">Has selected: %1$s</string>
     <string name="ok_button">OK</string>
 
     <string name="button_share">Share</string>
@@ -73,6 +73,10 @@
     <string name="notification_channel_description">Task completion notifications</string>
 
     <string name="task_notification_title">Task Completed</string>
+
+    <string name="export_task_error">Error exporting the task</string>
+
+
 
 
 </resources>

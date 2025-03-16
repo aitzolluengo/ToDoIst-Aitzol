@@ -2,6 +2,7 @@ package com.tzolas.todoist_aitzol.ui.tasklist;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,11 @@ public class TaskListFragment extends Fragment {
     }
 
     private void onTaskClick(Task task) {
+        if (task == null) {
+            Log.e("TaskListFragment", "⚠️ ERROR: Tarea nula al hacer clic");
+            return;
+        }
+
         TaskDetailFragment taskDetailFragment = new TaskDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable("task", task);
@@ -73,4 +79,5 @@ public class TaskListFragment extends Fragment {
                 .addToBackStack(null)
                 .commit();
     }
+
 }

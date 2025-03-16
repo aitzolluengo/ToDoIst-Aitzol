@@ -7,7 +7,7 @@ import android.content.Context;
 import com.tzolas.todoist_aitzol.data.local.dao.TaskDao;
 import com.tzolas.todoist_aitzol.data.local.entities.Task;
 
-@Database(entities = {Task.class}, version = 1, exportSchema = false)
+@Database(entities = {Task.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;

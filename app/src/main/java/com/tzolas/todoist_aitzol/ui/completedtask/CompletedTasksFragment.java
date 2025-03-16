@@ -41,7 +41,7 @@ public class CompletedTasksFragment extends Fragment {
             if (task != null) {
                 new AlertDialog.Builder(requireContext())
                         .setTitle(getString(R.string.task_selected_title))
-                        .setMessage(getString(R.string.task_selected_message) + " " + task.getTitle())
+                        .setMessage(getString(R.string.task_selected_message, task.getTitle()))
                         .setPositiveButton(getString(R.string.ok_button), null)
                         .show();
             }
