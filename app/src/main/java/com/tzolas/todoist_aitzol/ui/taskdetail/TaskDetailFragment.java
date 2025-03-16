@@ -147,63 +147,42 @@ public class TaskDetailFragment extends Fragment {
     // ---------------------------
 
     private void shareTask() {
-        if (task != null) {
-            String shareText = getString(R.string.share_task_text, task.getTitle(), task.getDescription());
-
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
-            sendIntent.setType("text/plain");
-
-            Intent shareIntent = Intent.createChooser(sendIntent, getString(R.string.share_task_title));
-            startActivity(shareIntent);
-        }
+        if (task == null) return;
+        String statusText = task.isCompleted() ? getString(R.string.task_completed) : getString(R.string.task_not_completed);
+        String shareText = getString(R.string.share_task_text, task.getTitle(), task.getDescription());
+        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getString(R.string.share_task_title)));
     }
+
+
+
 
 
     private void exportTaskToText() {
-        if (task == null) return;
-
-        try {
-            // Crear el contenido del archivo
-            String textContent = "Tarea: " + task.getTitle() + "\n" +
-                    "Descripción: " + task.getDescription() + "\n" +
-                    "Estado: " + (task.isCompleted() ? "Completada" : "No Completada");
-
-            // Obtener ruta de almacenamiento en Documents
-            File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "ToDoIstAitzol");
-            if (!folder.exists()) folder.mkdirs(); // Crear carpeta si no existe
-
-            File file = new File(folder, "task_" + task.getTitle().replace(" ", "_") + ".txt");
-
-            // Guardar el archivo
-            FileWriter writer = new FileWriter(file);
-            writer.write(textContent);
-            writer.flush();
-            writer.close();
-
-            // Mostrar mensaje de éxito con Snackbar y opción para compartir
-            Snackbar.make(requireView(), getString(R.string.task_exported), Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.share_task_txt), v -> shareTextFile(file))
-                    .show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(requireContext(), getString(R.string.export_task_error), Toast.LENGTH_SHORT).show();
+        if (task != null) {
+            File file = new File(requireContext().getExternalFilesDir(null), "task_export.txt");
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write("Tarea: " + task.getTitle() + "\n" +
+                        "Descripción: " + task.getDescription() + "\n" +
+                        "Estado: " + (task.isCompleted() ? "Completada" : "No Completada"));
+                writer.flush();
+                Toast.makeText(requireContext(), "Archivo guardado en:\n" + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                Toast.makeText(requireContext(), "Error al exportar tarea", Toast.LENGTH_SHORT).show();
+            }
         }
     }
-
-    // Función para compartir el TXT exportado
     private void shareTextFile(File file) {
         Uri uri = FileProvider.getUriForFile(requireContext(), "com.tzolas.todoist_aitzol.fileprovider", file);
-
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
         startActivity(Intent.createChooser(intent, getString(R.string.share_task_txt)));
     }
+
 
     // ---------------------------
     // NOTIFICACIONES
