@@ -9,16 +9,6 @@
         android:summary="@string/dark_mode_summary"
         android:defaultValue="false" />
 
-    <!-- Selector de tema -->
-    <ListPreference
-        android:key="theme"
-        android:title="@string/theme"
-        android:summary="@string/select_theme"
-        android:dialogTitle="@string/choose_theme"
-        android:entries="@array/theme_options"
-        android:entryValues="@array/theme_values"
-        android:defaultValue="light" />
-
     <!-- Selector de idioma -->
     <ListPreference
         android:key="pref_language"

@@ -59,7 +59,7 @@
     <string name="button_share">Compartir</string>
 
     <string name="share_task_title">Compartir tarea</string>
-    <string name="share_task_text">Tarea: %1$s\nDescripción: %2$s\nEstado: %3$s</string>
+    <string name="share_task_text">Tarea: %1$s\nDescripción: %2$s</string>
     <string name="task_not_completed">No Completada</string>
     <string name="export_task">Exportar tarea</string>
 
@@ -73,6 +73,8 @@
     <string name="notification_channel_description">Notificaciones de tareas completadas</string>
 
     <string name="task_notification_title">Tarea completada</string>
+
+
 
 
 
